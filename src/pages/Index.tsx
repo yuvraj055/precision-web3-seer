@@ -62,9 +62,9 @@ const Index = () => {
         contractName,
         severity: 'critical',
         title: 'Reentrancy Vulnerability',
-        description: 'External call made before state changes, potential for reentrancy attack.',
+        description: 'External call made before state changes, potential for reentrancy attack. This vulnerability allows malicious contracts to repeatedly call back into your contract before the first invocation is finished.',
         lineNumber: 42,
-        suggestion: 'Use checks-effects-interactions pattern or reentrancy guard.',
+        suggestion: 'Use checks-effects-interactions pattern or implement OpenZeppelin\'s ReentrancyGuard modifier to prevent reentrancy attacks.',
         category: 'Security'
       },
       {
@@ -72,30 +72,50 @@ const Index = () => {
         contractName,
         severity: 'high',
         title: 'Integer Overflow Risk',
-        description: 'Arithmetic operations without SafeMath library may cause overflow.',
+        description: 'Arithmetic operations without SafeMath library may cause overflow/underflow, leading to unexpected behavior and potential fund loss.',
         lineNumber: 67,
-        suggestion: 'Implement SafeMath library or use Solidity ^0.8.0 built-in overflow protection.',
+        suggestion: 'Implement SafeMath library for all arithmetic operations or upgrade to Solidity ^0.8.0 which includes built-in overflow protection.',
         category: 'Security'
       },
       {
         id: '3',
         contractName,
         severity: 'medium',
-        title: 'Gas Optimization',
-        description: 'Loop operations can be optimized to reduce gas consumption.',
+        title: 'Gas Optimization Opportunity',
+        description: 'Loop operations can be optimized to reduce gas consumption. Current implementation may hit gas limits with large datasets.',
         lineNumber: 89,
-        suggestion: 'Consider batch operations or pagination for large datasets.',
+        suggestion: 'Consider implementing batch operations, pagination for large datasets, or use more gas-efficient algorithms.',
         category: 'Gas Optimization'
       },
       {
         id: '4',
         contractName,
         severity: 'low',
-        title: 'Code Style',
-        description: 'Function visibility can be more explicit.',
+        title: 'Function Visibility',
+        description: 'Function visibility is not explicitly declared, which may lead to unintended access patterns.',
         lineNumber: 23,
-        suggestion: 'Explicitly declare function visibility (public, private, internal, external).',
+        suggestion: 'Explicitly declare function visibility (public, private, internal, external) for better security and code clarity.',
         category: 'Best Practices'
+      },
+      {
+        id: '5',
+        contractName,
+        severity: 'medium',
+        title: 'Missing Event Emissions',
+        description: 'Important state changes are not logged via events, making it difficult to track contract activity.',
+        lineNumber: 156,
+        suggestion: 'Emit events for all significant state changes to improve transparency and enable better off-chain monitoring.',
+        category: 'Best Practices'
+      },
+      {
+        id: '6',
+        contractName,
+        severity: 'high',
+        title: 'Unchecked External Call',
+        description: 'External call return value is not checked, which may lead to silent failures and inconsistent contract state.',
+        lineNumber: 78,
+        suggestion: 'Always check return values of external calls and handle failures appropriately with proper error handling.',
+        category: 'Security'
       }
     ];
   };
@@ -152,6 +172,7 @@ const Index = () => {
                 <AuditReport 
                   auditResults={selectedContract.auditResults}
                   isLoading={isAuditing}
+                  contractName={selectedContract.name}
                 />
               </TabsContent>
               
